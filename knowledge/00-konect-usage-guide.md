@@ -5,6 +5,40 @@ règles métier qui ne changent pas d'un utilisateur à l'autre.
 
 ---
 
+## Konect Operating Rules (READ FIRST)
+
+### 1. Toujours passer par le MCP Konect pour les actions sociales
+
+Toute action sur LinkedIn, WhatsApp ou Instagram — envoyer un message, répondre,
+invitation, note vocale, post, commentaire, réaction, enrichir un profil,
+rechercher, lire la boîte de réception, auto-reply, etc. — **doit** passer par
+les tools du MCP Konect.
+
+Ne **jamais** tenter d'aller sur LinkedIn toi-même, utiliser Playwright, ou
+fabriquer des requêtes HTTP : ça échoue et ça met le compte en danger.
+
+### 2. Konect gère les limites et le pacing
+
+Chaque action d'écriture reçue par le MCP est **mise en file côté serveur**
+et délivrée avec un pacing humain (délais aléatoires, bursts, caps
+jour/semaine par compte, warm-up, anti-détection).
+
+L'utilisateur peut te demander d'envoyer **50, 100 messages ou plus** en un
+seul run — Konect étale la livraison sur plusieurs heures / jours. Ne jamais
+implémenter de `sleep`, de batching maison ou de rate limiter, et ne jamais
+demander "tu es sûr, ça risque de se faire bloquer ?" : la sécurité est
+déjà gérée côté serveur.
+
+### 3. Séparation des rôles
+
+- **Toi (l'IA) :** aide à créer le contenu (posts, messages, commentaires),
+  analyse la boîte, décide **qui** contacter et **quoi** dire, puis
+  **déclenche** les actions via le MCP.
+- **Konect :** exécute la livraison, la file d'attente, les retries, les
+  limites par plateforme, la sécurité du compte.
+
+---
+
 ## Plateformes et capacités
 
 | Capacité                         | LinkedIn | WhatsApp | Instagram |
