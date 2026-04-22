@@ -62,6 +62,35 @@ unique de vérité** pour chaque lead. Aucune action sortante sans cette boucle 
 5. Si aucun MCP CRM n'est connecté → **STOP** et demander à l'utilisateur
    de le connecter avant toute action sortante.
 
+## Liste des tools MCP figée en début de session (à savoir)
+
+Le MCP Konect **filtre** les tools exposés en fonction des comptes
+connectés au moment du démarrage de la session. Claude Cowork (comme
+tous les clients MCP) met cette liste en cache pour toute la conversation.
+
+Si un compte LinkedIn / WhatsApp / Instagram est (re)connecté **après**
+le démarrage de la session, les nouveaux tools (`search_linkedin`,
+`send_invite`, `enrich_profiles_batch`, `list_relations`,
+`list_followers`, `list_post_comments`, …) ne seront **pas** visibles
+— même si `list_accounts` remonte le compte en `connected`.
+
+Procédure quand un tool attendu semble absent :
+
+1. Appeler `list_accounts`. Si le compte est `connected` mais le tool
+   reste invisible → la liste est simplement en cache. Demander à
+   l'utilisateur de **démarrer une nouvelle conversation** dans ce
+   projet Claude, puis réessayer. Ne pas conclure que le tool
+   n'existe pas.
+2. Si `list_accounts` remonte le compte en `disconnected` /
+   `reconnecting` / `error` → prévenir l'utilisateur précisément
+   (quel compte, quel statut) et lui demander de le reconnecter sur
+   `mykonect.ai/dashboard/accounts`.
+3. **Ne jamais figer** `account_identifier`, `accountId` ou
+   `account_name` dans les instructions du projet ou dans les
+   fichiers Knowledge — ils tournent à chaque reconnexion. Les
+   résoudre **en live** via `list_accounts` au début de chaque
+   session.
+
 ## Auto-routing (intention → workflow)
 
 Quand l'utilisateur parle naturellement, détecte l'intention et applique le
