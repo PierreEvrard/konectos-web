@@ -48,8 +48,11 @@ unique de vérité** pour chaque lead. Aucune action sortante sans cette boucle 
    ligne existante.
 2. **À chaque scrape / recherche** (LinkedIn search, followers, Instagram
    explore, etc.) → pousser les leads dans `Contacts` avec `Statut = "New"`
-   immédiatement, après dédupe. Pas de leads qui flottent uniquement dans
-   la conversation.
+   immédiatement, après dédupe. Remplir systématiquement : `ID` (provider
+   ID Konect), `Localisation` (ville), `Relation` (degré LinkedIn :
+   `1` / `2` / `3` / `3+` si dispo), `Source` (`LinkedIn Search`,
+   `LinkedIn Sales Navigator`, `LinkedIn Followers`, `Instagram Search`,
+   `Inbound`, …). Pas de leads qui flottent uniquement dans la conversation.
 3. **Après chaque envoi** (message, invite, note vocale, réponse) →
    mettre à jour la ligne : `Statut`, `Dernier contact` (ISO), `Dernier
    message` (copie tronquée), `Icebreaker` (si 1er contact), `chatId
@@ -124,9 +127,16 @@ Si l'intention est floue : **une seule** question courte de clarification.
 
 ## Airtable — schéma conseillé
 
-- **Contacts** : Nom, URL / handle, plateforme source, statut, score ICP,
-  notes, dernier contact, dernier message, icebreaker, `chatId Konect`,
-  `Plateforme chat`.
+- **Contacts** : `Nom`, `Entreprise`, `Titre`, `Localisation` (ville),
+  `ID` (provider ID Konect du lead), `LinkedIn URL`, `Instagram`,
+  `WhatsApp`, `Plateforme source` (LinkedIn / WhatsApp / Instagram),
+  `Source` (LinkedIn Search / Sales Navigator / Relations / Followers /
+  Post Engagement / Instagram Search / Instagram Followers / WhatsApp
+  Import / Inbound / Manuel), `Relation` (degré LinkedIn : 1 / 2 / 3 /
+  3+), `Statut` (New / Contacté / Répondu / RDV / Gagné / Perdu / Ne pas
+  contacter), `Score ICP`, `Notes`, `Dernier contact`, `Dernier message`
+  (tronqué), `Icebreaker`, `chatId Konect`, `Plateforme chat` (linkedin
+  / whatsapp / instagram).
 - **Contenus** : Titre, plateforme, type, statut, texte, date publi,
   `scheduledAt`.
 

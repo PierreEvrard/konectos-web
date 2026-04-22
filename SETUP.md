@@ -55,8 +55,13 @@ tiers. Tu auras besoin de ton **Airtable API key** (depuis
 `airtable.com/account`) et du **base ID** de ta base KonectOS.
 
 Tables conseillées (créées par `/onboarding` si besoin) :
-- **Contacts** : Nom, URL / handle, plateforme source, statut, score ICP,
-  notes, dernier contact, dernier message, icebreaker, `chatId Konect`,
+- **Contacts** : `Nom`, `Entreprise`, `Titre`, `Localisation` (ville),
+  `ID` (provider ID Konect du lead), `LinkedIn URL`, `Instagram`,
+  `WhatsApp`, `Plateforme source`, `Source` (LinkedIn Search / Sales
+  Navigator / Relations / Followers / Post Engagement / Instagram
+  Search / Instagram Followers / WhatsApp Import / Inbound / Manuel),
+  `Relation` (1 / 2 / 3 / 3+), `Statut`, `Score ICP`, `Notes`, `Dernier
+  contact`, `Dernier message`, `Icebreaker`, `chatId Konect`,
   `Plateforme chat`.
 - **Contenus** : Titre, plateforme, type, statut, texte, date publi,
   `scheduledAt`.

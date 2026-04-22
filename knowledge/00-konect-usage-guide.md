@@ -175,13 +175,32 @@ Actions enfilées en dehors de la fenêtre sont automatiquement décalées.
 Le CRM est la **source unique de vérité** pour chaque lead touché. Sans
 CRM connecté, l'assistant doit refuser toute action sortante.
 
-### Schéma `Contacts` (minimal)
+### Schéma `Contacts` (canonique)
 
-`Nom`, `URL / handle`, `Plateforme source`, `Statut` (singleSelect :
-`New` / `Contacté` / `Répondu` / `RDV` / `Gagné` / `Perdu`), `Score ICP`,
-`Notes`, `Dernier contact` (date/ISO), `Dernier message` (texte tronqué),
-`Icebreaker` (texte), `chatId Konect`, `Plateforme chat` (singleSelect :
-`linkedin` / `whatsapp` / `instagram`).
+Champs (ordre conseillé) :
+
+- `Nom`, `Entreprise`, `Titre`
+- `Localisation` (ville, singleLineText)
+- `ID` (singleLineText) — **provider ID Konect du lead** (LinkedIn
+  provider id, Instagram user id, WhatsApp phone id). Indispensable
+  pour les invitations LinkedIn et pour ré-apparier les conversations.
+- `LinkedIn URL`, `Instagram`, `WhatsApp`
+- `Plateforme source` (singleSelect : `LinkedIn` / `WhatsApp` /
+  `Instagram`)
+- `Source` (singleSelect : `LinkedIn Search` / `LinkedIn Sales
+  Navigator` / `LinkedIn Relations` / `LinkedIn Followers` /
+  `LinkedIn Post Engagement` / `Instagram Search` / `Instagram
+  Followers` / `WhatsApp Import` / `Inbound` / `Manuel`) — d'où vient
+  le lead exactement.
+- `Relation` (singleSelect : `1` / `2` / `3` / `3+`) — degré de
+  relation LinkedIn.
+- `Statut` (singleSelect : `New` / `Contacté` / `Répondu` / `RDV` /
+  `Gagné` / `Perdu` / `Ne pas contacter`)
+- `Score ICP` (number), `Notes` (multilineText)
+- `Dernier contact` (date/ISO), `Dernier message` (texte tronqué),
+  `Icebreaker` (texte)
+- `chatId Konect`, `Plateforme chat` (singleSelect : `linkedin` /
+  `whatsapp` / `instagram`)
 
 ### Schéma `Contenus`
 
@@ -192,7 +211,11 @@ CRM connecté, l'assistant doit refuser toute action sortante.
 
 1. **Scrape / recherche** (`list_linkedin_search_results`,
    `list_relations`, `list_followers`, etc.) → dédupe contre `Contacts`
-   par URL / handle → insérer les nouveaux avec `Statut = "New"`.
+   par URL / handle → insérer les nouveaux avec `Statut = "New"`, et
+   remplir **à la création** : `ID` (provider ID Konect), `Localisation`
+   (ville), `Relation` (degré LinkedIn `1` / `2` / `3` / `3+`),
+   `Source` (ex. `LinkedIn Search`, `LinkedIn Sales Navigator`,
+   `LinkedIn Followers`, `Instagram Search`, `Inbound`, …).
 2. **Avant envoi** → s'assurer que la cible existe dans `Contacts`. Si
    non, la créer d'abord (dédupe par URL / handle).
 3. **Après envoi** (chaque `queueId`) → MAJ `Statut = "Contacté"`,
