@@ -28,10 +28,9 @@ terminal, sans curl. Tout passe par les MCPs.
 Dans le projet, onglet **Knowledge**, uploade les fichiers suivants du dossier
 [`knowledge/`](./knowledge/) :
 
-- `00-konect-usage-guide.md` — conventions + patterns + règles métier
+- `00-konect-usage-guide.md` — conventions + patterns + règles métier + schéma CRM
 - `01-persona-template.md` — à personnaliser (ton profil + ton ICP)
 - `02-offer-template.md` — à personnaliser (offre + CTA)
-- `03-sequences-template.md` — à personnaliser (séquences multi-touch)
 - `04-templates-messages.md` — à personnaliser (icebreakers, relances)
 
 **Les fichiers `template` sont à éditer AVANT upload** pour remplacer les
@@ -57,9 +56,15 @@ tiers. Tu auras besoin de ton **Airtable API key** (depuis
 
 Tables conseillées (créées par `/onboarding` si besoin) :
 - **Contacts** : Nom, URL / handle, plateforme source, statut, score ICP,
-  notes, dernier contact, `chatId Konect`, `Plateforme chat`.
+  notes, dernier contact, dernier message, icebreaker, `chatId Konect`,
+  `Plateforme chat`.
 - **Contenus** : Titre, plateforme, type, statut, texte, date publi,
   `scheduledAt`.
+
+> **À savoir** : l'assistant applique une règle dure de CRM-sync — chaque
+> lead scrapé est poussé dans `Contacts` (dédupliqué), et chaque envoi met
+> à jour la ligne correspondante. Pas de CRM connecté = pas d'action
+> sortante. Voir `claude-project-instructions.md` section "CRM-sync".
 
 ## 5. Premier message (1 min)
 

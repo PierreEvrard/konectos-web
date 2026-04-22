@@ -170,18 +170,43 @@ Actions enfilées en dehors de la fenêtre sont automatiquement décalées.
 
 ---
 
-## Conventions Airtable (si utilisé)
+## Conventions CRM (Airtable par défaut — obligatoire)
 
-Table **Contacts** minimale :
-- `Nom`, `URL / handle`, `Plateforme source`, `Statut`, `Score ICP`, `Notes`,
-  `Dernier contact`, `chatId Konect`, `Plateforme chat`.
+Le CRM est la **source unique de vérité** pour chaque lead touché. Sans
+CRM connecté, l'assistant doit refuser toute action sortante.
 
-Table **Contenus** :
-- `Titre`, `Plateforme`, `Type`, `Statut`, `Texte`, `Date publi`,
-  `scheduledAt`.
+### Schéma `Contacts` (minimal)
 
-Pas de table séquences — les séquences sont décrites en markdown dans le
-fichier knowledge `03-sequences-template.md`.
+`Nom`, `URL / handle`, `Plateforme source`, `Statut` (singleSelect :
+`New` / `Contacté` / `Répondu` / `RDV` / `Gagné` / `Perdu`), `Score ICP`,
+`Notes`, `Dernier contact` (date/ISO), `Dernier message` (texte tronqué),
+`Icebreaker` (texte), `chatId Konect`, `Plateforme chat` (singleSelect :
+`linkedin` / `whatsapp` / `instagram`).
+
+### Schéma `Contenus`
+
+`Titre`, `Plateforme`, `Type`, `Statut`, `Texte`, `Date publi`,
+`scheduledAt`.
+
+### Boucle CRM-sync (règle dure)
+
+1. **Scrape / recherche** (`list_linkedin_search_results`,
+   `list_relations`, `list_followers`, etc.) → dédupe contre `Contacts`
+   par URL / handle → insérer les nouveaux avec `Statut = "New"`.
+2. **Avant envoi** → s'assurer que la cible existe dans `Contacts`. Si
+   non, la créer d'abord (dédupe par URL / handle).
+3. **Après envoi** (chaque `queueId`) → MAJ `Statut = "Contacté"`,
+   `Dernier contact` (ISO), `Dernier message` (copie tronquée),
+   `Icebreaker` (si 1er contact), `chatId Konect` dès dispo.
+4. **Inbox** → chaque message inbound → retrouver la ligne (par
+   `chatId Konect` ou URL) → `Statut = "Répondu"` + extrait dans
+   `Notes`. Si aucune ligne, en créer une (la personne a écrit en
+   premier = lead entrant).
+5. Respecter les options `singleSelect` existantes — valeurs EXACTES
+   (sinon `INVALID_MULTIPLE_CHOICE_OPTIONS`).
+
+Autres CRM possibles (Notion, HubSpot, Pipedrive, Salesforce…) : même
+logique, mêmes 5 règles, adapter les noms de champs.
 
 ---
 

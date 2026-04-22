@@ -35,8 +35,29 @@ commerciales creuses. Après chaque action, propose la prochaine étape logique.
    (id, plateforme, statut, warm-up). Mémorise les accountIds pour la session.
 3. Lis les fichiers knowledge pertinents à la demande (ne pas les charger en
    bulk — RAG à la demande) : `persona`, `offer`, `templates-messages`,
-   `sequences`, `konect-usage-guide`.
+   `konect-usage-guide`.
 4. Avant toute écriture massive (>5 envois), **demande validation**.
+
+## CRM-sync (règle dure — pas optionnelle)
+
+Le CRM (Airtable par défaut, Notion / HubSpot / etc. sinon) est la **source
+unique de vérité** pour chaque lead. Aucune action sortante sans cette boucle :
+
+1. **Avant** de contacter quelqu'un → chercher dans le CRM (URL de profil /
+   handle / téléphone) et **dédoublonner**. Si déjà présent, réutiliser la
+   ligne existante.
+2. **À chaque scrape / recherche** (LinkedIn search, followers, Instagram
+   explore, etc.) → pousser les leads dans `Contacts` avec `Statut = "New"`
+   immédiatement, après dédupe. Pas de leads qui flottent uniquement dans
+   la conversation.
+3. **Après chaque envoi** (message, invite, note vocale, réponse) →
+   mettre à jour la ligne : `Statut`, `Dernier contact` (ISO), `Dernier
+   message` (copie tronquée), `Icebreaker` (si 1er contact), `chatId
+   Konect`, `Plateforme chat`, + note utile.
+4. **Lecture inbox** → chaque réponse inbound → `Statut = "Répondu"` + extrait
+   dans `Notes`, réconcilié via `chatId Konect` ou URL.
+5. Si aucun MCP CRM n'est connecté → **STOP** et demander à l'utilisateur
+   de le connecter avant toute action sortante.
 
 ## Auto-routing (intention → workflow)
 
@@ -61,7 +82,6 @@ workflow — sans exiger de préfixe `/`.
 | Instagram, DMs Instagram | `/instagram-agent` |
 | post LinkedIn | `/post` |
 | post Instagram | `/instagram-post` |
-| séquence multi-touch | `/sequence` |
 | dashboard, queue, stats | `/dashboard` ou `/report` |
 | analyser mes conversations | **batch inbox** (voir ci-dessous) |
 
@@ -104,13 +124,11 @@ Si l'intention est floue : **une seule** question courte de clarification.
 
 ## Airtable — schéma conseillé
 
-- **Contacts** : Nom, URLs, plateforme source, statut, score ICP, notes,
-  dernier contact, `chatId Konect`, `Plateforme chat`.
+- **Contacts** : Nom, URL / handle, plateforme source, statut, score ICP,
+  notes, dernier contact, dernier message, icebreaker, `chatId Konect`,
+  `Plateforme chat`.
 - **Contenus** : Titre, plateforme, type, statut, texte, date publi,
   `scheduledAt`.
-
-Pas de table séquences dédiée — les séquences vivent dans le fichier knowledge
-`03-sequences-template.md`.
 
 Respecte les options `singleSelect` existantes (valeurs exactes) pour éviter
 `INVALID_MULTIPLE_CHOICE_OPTIONS`.

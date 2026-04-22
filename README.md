@@ -12,8 +12,9 @@ Projects) en assistant d'automatisation sociale branché sur **Konect**
 - [`SETUP.md`](./SETUP.md) — guide d'installation en 5 minutes.
 - [`claude-project-instructions.md`](./claude-project-instructions.md) —
   instructions à coller dans le champ "Project instructions" (≈ 2k tokens).
-- [`knowledge/`](./knowledge/) — fichiers markdown à uploader dans la
-  knowledge base du projet Claude (RAG à la demande).
+- [`knowledge/`](./knowledge/) — 4 fichiers markdown à uploader dans la
+  knowledge base du projet (RAG à la demande) : usage guide, persona,
+  offre, templates de messages.
 - [`onboarding-prompt.md`](./onboarding-prompt.md) — prompt initial pour se
   configurer par conversation.
 
